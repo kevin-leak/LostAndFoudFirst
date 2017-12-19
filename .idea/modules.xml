@@ -3,7 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/LostAndFoudFirst.iml" filepath="$PROJECT_DIR$/LostAndFoudFirst.iml" />
+      <module fileurl="file://D:\Users\Administrator\Documents\GitHub\LostAndFoudFirst\LostAndFoudFirst.iml" filepath="D:\Users\Administrator\Documents\GitHub\LostAndFoudFirst\LostAndFoudFirst.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://D:\Users\Administrator\Documents\GitHub\LostAndFoudFirst\app\app.iml" filepath="D:\Users\Administrator\Documents\GitHub\LostAndFoudFirst\app\app.iml" />
     </modules>
   </component>
 </project>
