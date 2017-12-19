@@ -26,7 +26,23 @@ dependencies {
     })
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
     compile 'com.ashokvarma.android:bottom-navigation-bar:1.2.0'
-    compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
+    // LeanCloud 基础包
+    compile ('cn.leancloud.android:avoscloud-sdk:v4.4.4')
+
+    // 推送与实时聊天需要的包
+    compile ('cn.leancloud.android:avoscloud-push:v4.4.4@aar'){transitive = true}
+
+    // LeanCloud 统计包
+    compile ('cn.leancloud.android:avoscloud-statistics:v4.4.4')
+
+    // LeanCloud 用户反馈包
+    compile ('cn.leancloud.android:avoscloud-feedback:v4.4.4@aar')
+
+    // avoscloud-sns：LeanCloud 第三方登录包
+    compile ('cn.leancloud.android:avoscloud-sns:v4.4.4@aar')
+    compile ('cn.leancloud.android:qq-sdk:1.6.1-leancloud')
+
+    // LeanCloud 应用内搜索包
+    compile ('cn.leancloud.android:avoscloud-search:v4.4.4@aar')
 }
