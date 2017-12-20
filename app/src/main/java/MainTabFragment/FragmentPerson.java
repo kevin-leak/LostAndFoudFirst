@@ -18,19 +18,24 @@ import com.example.lostandfoudfirst.R;
 public class FragmentPerson extends Fragment {
 
     private TextView textView;
+    private TextView tvUserInfo;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.fragment_person,container,false);
+        View view=inflater.inflate(R.layout.fragment_person,null);
         return view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        textView=(TextView)view.findViewById(R.id.tv_person);
-        textView.setText("个人信息");
-        Log.d("PersonFragment","______________CreatedPerson_______________");
+        tvUserInfo = view.findViewById(R.id.tvUserInfo);
+        tvUserInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO: 2017/12/20 建立个人信息
+            }
+        });
         super.onViewCreated(view, savedInstanceState);
 
     }

@@ -35,6 +35,10 @@ public class FragmentMain extends Fragment {
         return view;
     }
 
+    /**
+     * @param view
+     * @param savedInstanceState
+     */
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
@@ -52,6 +56,24 @@ public class FragmentMain extends Fragment {
         tabtwo = tabLayout.getTabAt(1);
         tabthree = tabLayout.getTabAt(2);
         tabfour = tabLayout.getTabAt(3);
+
+        /*设置tab的监听事件*/
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
 
         Log.d("MainFragment","______________onViewCreated_______________");
 

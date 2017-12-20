@@ -3,7 +3,10 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="colorbuttom">#FFCCCC</color>
-    <color name="colorbackwhite">#FFFFCC</color>
-    <color name="colorguide">#99CCFF</color>
+    <color name="colorButton">#FFCCCC</color>
+    <color name="colorBackWhite">#FFFFCC</color>
+    <color name="colorWhite">#ffffff</color>
+    <color name="colorGuide">#99CCFF</color>
+    <color name="colorGray">#e1e1e1</color>
+    <color name="faceBookColor">#3b5998</color>
 </resources>

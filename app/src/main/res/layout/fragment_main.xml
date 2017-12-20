@@ -10,7 +10,7 @@
         android:layout_height="60dp"
         android:background="#eeff41"
         app:tabIndicatorHeight="2dp"
-        app:tabIndicatorColor="@color/colorguide"
+        app:tabIndicatorColor="@color/colorGuide"
         app:tabTextColor="#263238"
         app:tabSelectedTextColor="#ff8f00"
         app:tabMode="fixed"
