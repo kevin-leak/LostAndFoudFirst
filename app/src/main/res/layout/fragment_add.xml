@@ -37,6 +37,7 @@
     <EditText
         android:id="@+id/etGoodsName"
         android:layout_width="match_parent"
+        android:hint="goods name"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
         android:layout_marginBottom="10dp"
@@ -46,6 +47,7 @@
 
     <EditText
         android:id="@+id/etLostPlace"
+        android:hint="lost place"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
         android:layout_marginBottom="10dp"
@@ -59,6 +61,7 @@
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
         android:layout_marginBottom="10dp"
+        android:hint="lost time"
         android:layout_width="match_parent"
         android:background="@drawable/info_frame_shape"
         android:layout_height="50dp"
@@ -75,6 +78,7 @@
 
         <EditText
             android:id="@+id/etLostInfo"
+            android:hint="lost info details"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:elevation="10dp"
@@ -83,12 +87,11 @@
         <Button
             android:id="@+id/ibCommit"
             android:layout_height="50dp"
-            android:text="Commit"
             android:textAllCaps="false"
             android:layout_width="50dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
-            android:background="@color/faceBookColor"
+            android:background="@drawable/ic_ok"
             android:elevation="10dp"/>
 
     </RelativeLayout>

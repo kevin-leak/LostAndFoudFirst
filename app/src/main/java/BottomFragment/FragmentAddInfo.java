@@ -49,9 +49,7 @@ public class FragmentAddInfo extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initView(view);
-        Log.d("AddFragment","______________CreatedAddInfo_______________");
 
-        //
 
     }
 
