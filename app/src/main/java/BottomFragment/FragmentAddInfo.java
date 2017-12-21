@@ -94,6 +94,7 @@ public class FragmentAddInfo extends Fragment {
         goods.put("image",new AVFile(etGoodsName.getText().toString()+"image",null));
         goods.put("owner",user);
         goods.saveInBackground();
+
     }
 
     /**
