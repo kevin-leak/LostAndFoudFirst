@@ -9,4 +9,5 @@
     <color name="colorGuide">#99CCFF</color>
     <color name="colorGray">#e1e1e1</color>
     <color name="faceBookColor">#3b5998</color>
+    <color name="colorBlack">#000000</color>
 </resources>
