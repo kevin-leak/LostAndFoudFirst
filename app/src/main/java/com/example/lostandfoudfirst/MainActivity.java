@@ -1,12 +1,15 @@
 package com.example.lostandfoudfirst;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
@@ -18,7 +21,8 @@ import java.util.ArrayList;
 
 import BottomFragment.FragmentAddInfo;
 import BottomFragment.FragmentMain;
-import MainTabFragment.FragmentPerson;
+import BottomFragment.FragmentPerson;
+import MainTabFragment.FragmentAll;
 
 public class MainActivity extends AppCompatActivity implements  BottomNavigationBar.OnTabSelectedListener{
 
@@ -30,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements  BottomNavigation
     //优化Fragment的加载
     private FragmentTransaction fragmentTransaction;
     private ArrayList<Fragment> fragments;
+    private FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,17 +43,6 @@ public class MainActivity extends AppCompatActivity implements  BottomNavigation
         setContentView(R.layout.activity_main);
         initView();
 
-        // 测试 SDK 是否正常工作的代码
-        AVObject testObject = new AVObject("TestObject");
-        testObject.put("words","Hello World!");
-        testObject.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(AVException e) {
-                if(e == null){
-                    Log.d("saved","success!");
-                }
-            }
-        });
     }
 
 
@@ -56,9 +50,9 @@ public class MainActivity extends AppCompatActivity implements  BottomNavigation
         //TODO 还可设置顶部导航栏的效果
         bottomNavigationBar=(BottomNavigationBar)findViewById(R.id.bottom_bar);
 
-        bottomNavigationBar.addItem(new BottomNavigationItem(R.drawable.ic_info_in_blue_200_24dp,"发布")).setActiveColor(R.color.colorButton)
-                .addItem(new BottomNavigationItem(R.drawable.ic_main_blue_200_24dp,"")).setActiveColor(R.color.colorButton)
-                .addItem(new BottomNavigationItem(R.drawable.ic_personinfo_blue_200_24dp,"个人信息")).setActiveColor(R.color.colorButton)
+        bottomNavigationBar.addItem(new BottomNavigationItem(R.drawable.ic_info_in_blue_200_24dp,"发布")).setActiveColor(R.color.colorWhite)
+                .addItem(new BottomNavigationItem(R.drawable.ic_main_blue_200_24dp,"")).setActiveColor(R.color.colorWhite)
+                .addItem(new BottomNavigationItem(R.drawable.ic_personinfo_blue_200_24dp,"个人信息")).setActiveColor(R.color.colorWhite)
                 .setFirstSelectedPosition(1)
                 .initialise();
 
@@ -100,8 +94,9 @@ public class MainActivity extends AppCompatActivity implements  BottomNavigation
     public void onTabSelected(int position) {
          if(fragments != null) {
             if (position < fragments.size()) {
-                FragmentManager fragmentManager= getSupportFragmentManager();
-                fragmentTransaction=fragmentManager.beginTransaction();
+
+                fragmentManager = getSupportFragmentManager();
+                fragmentTransaction = fragmentManager.beginTransaction();
 
                 //当前的fragment
                 Fragment fragmetnfrom = fragmentManager.findFragmentById(R.id.layout_contain);
@@ -111,12 +106,12 @@ public class MainActivity extends AppCompatActivity implements  BottomNavigation
                 if (fragmentto.isAdded()) {//确认是否加入framgment
                     // 隐藏当前的fragment，显示下一个
                     fragmentTransaction.hide(fragmetnfrom).show(fragmentto);
-                    if (position == 0){
-                        /*当点击到发布页面我们将底边的切换按钮隐藏*/
-                        bottomNavigationBar.setVisibility(View.GONE);
-                    }
+
+                    //设置隐藏
+                    setBottomBarVisibility(position);
+
                 } else {
-                    // 隐藏当前的fragment，add下一个到Activity中
+                    // 隐藏当前的fragment，add下一个到fragment中
                     fragmentTransaction.hide(fragmetnfrom).add(R.id.layout_contain, fragmentto);
                     if (fragmentto.isHidden()) {
                         fragmentTransaction.show(fragmentto);
@@ -133,6 +128,20 @@ public class MainActivity extends AppCompatActivity implements  BottomNavigation
             fragmentTransaction.commitAllowingStateLoss();
         }
     }
+
+    /**
+     * @param position 传入当前的framgment的位置
+     * 隐藏bar当的 position = 0 || 1;
+     */
+    private void setBottomBarVisibility(int position) {
+        //出现回调，让它显示
+        if (position == 0 || position == 1){
+            /*当点击到发布页面我们将底边的切换按钮隐藏*/
+            bottomNavigationBar.setVisibility(View.GONE);
+        }
+    }
+
+    //设置回退键的效果
     @Override
     public void onTabUnselected(int position) {
         //这儿也要操作隐藏，否则Fragment会重叠
@@ -142,18 +151,15 @@ public class MainActivity extends AppCompatActivity implements  BottomNavigation
                 Fragment fragment = fragments.get(position);
                 // 隐藏当前的fragment
                 ft.hide(fragment).commitAllowingStateLoss();
+                setBottomBarVisibility(position);
 
-                /*当点击到发布页面我们将底边的切换按钮隐藏*/
-                if (position == 0){
-                    bottomNavigationBar.setVisibility(View.GONE);
-                }
             }
         }
-
     }
 
     @Override
     public void onTabReselected(int position) {
 
     }
+
 }

@@ -1,4 +1,4 @@
-package MainTabFragment;
+package BottomFragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
