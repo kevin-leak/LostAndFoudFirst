@@ -83,7 +83,7 @@ public class FragmentAddInfo extends Fragment {
     private WindowManager windowManager;
     private Display display;
 
-
+// TODO: 2017/12/21 设置返回键
 
     @Nullable
     @Override
@@ -103,7 +103,7 @@ public class FragmentAddInfo extends Fragment {
 
         initView(view);
         //假如没有登入先登入
-        if (!isLogin()){
+        if (isLogin()){
             skipToLogin();
         }else {
 
