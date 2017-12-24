@@ -77,4 +77,13 @@ public class DrawableUtils {
             return null;
         }
     }
+
+    /**
+     *  Drawable 文件改变为 byte[]
+     * @param drawable
+     * @return
+     */
+    public static byte[] DrawableToByte(Drawable drawable) {
+        return bitmapToByte(drawableTOBitmap(drawable));
+    }
 }

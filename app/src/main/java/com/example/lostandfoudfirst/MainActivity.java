@@ -6,28 +6,22 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.View;
-import android.widget.Toast;
+import android.view.MenuItem;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.SaveCallback;
+import com.avos.avoscloud.AVUser;
 
 import java.util.ArrayList;
 
 import BottomFragment.FragmentAddInfo;
 import BottomFragment.FragmentMain;
 import BottomFragment.FragmentPerson;
-import MainTabFragment.FragmentAll;
 
 public class MainActivity extends AppCompatActivity implements  BottomNavigationBar.OnTabSelectedListener{
 
     //顶部导航栏部分
-    private BottomNavigationBar bottomNavigationBar;
+    public static BottomNavigationBar bottomNavigationBar;
     private FragmentMain fragmentMain;
     private FragmentAddInfo fragmentAddInfo;
     private FragmentPerson fragmentPerson;
@@ -35,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements  BottomNavigation
     private FragmentTransaction fragmentTransaction;
     private ArrayList<Fragment> fragments;
     private FragmentManager fragmentManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,57 +86,52 @@ public class MainActivity extends AppCompatActivity implements  BottomNavigation
 
 
     @Override
-    public void onTabSelected(int position) {
+    public void onTabSelected(int newPosition) {
          if(fragments != null) {
-            if (position < fragments.size()) {
+            if (newPosition < fragments.size()) {
 
                 fragmentManager = getSupportFragmentManager();
                 fragmentTransaction = fragmentManager.beginTransaction();
 
                 //当前的fragment
-                Fragment fragmetnfrom = fragmentManager.findFragmentById(R.id.layout_contain);
+                Fragment fragmentFrom = fragmentManager.findFragmentById(R.id.layout_contain);
                 //点击即将跳转的fragment
-                Fragment fragmentto = fragments.get(position);
-                //下面的不懂
-                if (fragmentto.isAdded()) {//确认是否加入framgment
-                    // 隐藏当前的fragment，显示下一个
-                    fragmentTransaction.hide(fragmetnfrom).show(fragmentto);
+                Fragment fragmentTo = fragments.get(newPosition);
 
-                    //设置隐藏
-                    setBottomBarVisibility(position);
+                //处理此时需要登入才能发消息的逻辑,启动登入界面
+                if (newPosition == 0 && AVUser.getCurrentUser() == null){
+                    Intent intent = new Intent();
+                    intent.putExtra(LoginAndRegisterActivity.INFO_SHOULD_DO,LoginAndRegisterActivity.INFO_LOGIN );
+                    intent.setClass(this,LoginAndRegisterActivity.class);
+                    startActivity(intent);
+                }
+
+                //确定点击的是不是同一个
+                if (fragmentTo.isAdded()) {//确认是否已经加入framgment
+                    // 隐藏当前的fragment，再显示
+                    fragmentTransaction.hide(fragmentFrom).show(fragmentTo);
 
                 } else {
                     // 隐藏当前的fragment，add下一个到fragment中
-                    fragmentTransaction.hide(fragmetnfrom).add(R.id.layout_contain, fragmentto);
-                    if (fragmentto.isHidden()) {
-                        fragmentTransaction.show(fragmentto);
+                    fragmentTransaction.hide(fragmentFrom).add(R.id.layout_contain, fragmentTo);
+                    if (fragmentTo.isHidden()) {
+                        fragmentTransaction.show(fragmentTo);
                         //Log.d("","被隐藏了");
                     }
-
-                    /*当点击到发布页面我们将底边的切换按钮隐藏*/
-                    if (position == 0){
-                        bottomNavigationBar.setVisibility(View.GONE);
-                    }
                 }
-
             }
-            fragmentTransaction.commitAllowingStateLoss();
+            //要设置动画对象，来动态化的改变跳转页面
+             //修改为不可存储状态的fragment，更安全，并有助于发布info时成功后的清空
+            fragmentTransaction.commit();
+            //这个方法是调用是的底部栏可以动态化选择
+             bottomNavigationBar.selectTab(newPosition);
         }
     }
+
 
     /**
-     * @param position 传入当前的framgment的位置
-     * 隐藏bar当的 position = 0 || 1;
+     * @param position 指的是被选择的老的postion
      */
-    private void setBottomBarVisibility(int position) {
-        //出现回调，让它显示
-        if (position == 0 || position == 1){
-            /*当点击到发布页面我们将底边的切换按钮隐藏*/
-            bottomNavigationBar.setVisibility(View.GONE);
-        }
-    }
-
-    //设置回退键的效果
     @Override
     public void onTabUnselected(int position) {
         //这儿也要操作隐藏，否则Fragment会重叠
@@ -151,12 +141,14 @@ public class MainActivity extends AppCompatActivity implements  BottomNavigation
                 Fragment fragment = fragments.get(position);
                 // 隐藏当前的fragment
                 ft.hide(fragment).commitAllowingStateLoss();
-                setBottomBarVisibility(position);
 
             }
         }
     }
 
+    /**
+     * @param position 新的position
+     */
     @Override
     public void onTabReselected(int position) {
 

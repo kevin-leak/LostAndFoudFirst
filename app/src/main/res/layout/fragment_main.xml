@@ -8,16 +8,19 @@
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="#eeff41"
         app:tabIndicatorHeight="2dp"
+        android:layout_marginTop="20dp"
         app:tabIndicatorColor="@color/colorGuide"
         app:tabTextColor="#263238"
         app:tabSelectedTextColor="#ff8f00"
         app:tabMode="fixed"
-        app:tabBackground="@drawable/tabshow"
         app:tabGravity="fill"
-
+        app:tabBackground="@drawable/tabshow"
         />
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="0.5dp"
+        android:background="@color/colorGray"/>
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"

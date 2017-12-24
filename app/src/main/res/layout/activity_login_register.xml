@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/llLoginAndRegister"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_centerInParent="true"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/tvUserTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="50dp"
+            android:text="Sign In"
+            android:elevation="4dp"
+            android:textColor="#6da36b"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:layout_marginBottom="30dp"/>
+
+        <EditText
+            android:id="@+id/etAccount"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/colorGray"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:hint="Account"
+            android:elevation="4dp"
+            android:textAlignment="center"
+            android:inputType="phone"
+            android:layout_marginBottom="8dp"
+            android:alpha="0.5"/>
+
+        <LinearLayout
+            android:id="@+id/llCode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:elevation="4dp"
+            android:layout_marginBottom="4dp"
+            android:alpha="0.5">
+
+            <EditText
+                android:id="@+id/etSetCode"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:hint="Auth Code"
+                android:textColorHint="#FFFFFF"
+                android:textAlignment="center"
+                android:elevation="4dp"
+                android:background="@color/colorGray"/>
+
+            <Button
+                android:id="@+id/btnGetCode"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:text="get"
+                android:textColor="@color/colorWhite"
+                android:textAllCaps="true"
+                android:elevation="4dp"
+                android:background="#cda374ab"/>
+
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/etPassword"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/colorGray"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:elevation="4dp"
+            android:hint="Password"
+            android:alpha="0.5"/>
+
+        <Button
+            android:id="@+id/btnSaveBack"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:textAllCaps="false"
+            android:background="@color/faceBookColor"
+            android:elevation="4dp"
+            android:textColorHint="#D77A61"
+            android:textColor="@color/colorWhite"
+            android:text="Commit"/>
+
+        <TextView
+            android:id="@+id/tvSwitchTo"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            android:text="Sign In"
+            android:textColor="@color/avoscloud_blue"
+            android:gravity="center"/>
+
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/ibProblem"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:elevation="4dp"
+        android:background="@drawable/ic_problem"
+        android:layout_marginBottom="20dp" />
+
+</RelativeLayout>

@@ -1,12 +1,158 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorGray">
 
     <TextView
-        android:id="@+id/tvUserInfo"
+        android:id="@+id/tvTitle"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="60dp"
+        android:layout_marginTop="20dp"
+        android:text="我的"
+        android:textSize="20dp"
+        android:gravity="center"
+        android:background="@color/colorWhite"
+        android:textStyle="bold"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        android:background="@color/colorGray"
+        android:scrollIndicators="none">
+
+        <LinearLayout
+            android:layout_below="@id/tvTitle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@color/colorGray">
+
+            <RelativeLayout
+                android:id="@+id/rlUserInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorWhite">
+
+                <ImageView
+                    android:id="@+id/ivUserAvater"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/ic_image"
+                    android:layout_alignParentLeft="true"
+                    android:layout_margin="20dp"/>
+
+                <TextView
+                    android:id="@+id/tvUserName"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_height="wrap_content"
+                    android:text="未登入"
+                    android:textSize="18dp"
+                    android:background="@color/colorWhite"
+                    android:layout_toRightOf="@id/ivUserAvater"
+                    android:layout_alignParentTop="true" />
+
+                <TextView
+                    android:id="@+id/tvDetails"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="点击登入"
+                    android:textSize="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_below="@id/tvUserName"
+                    android:layout_toRightOf="@id/ivUserAvater"
+                    android:background="@color/colorWhite" />
+
+                <ImageButton
+                    android:id="@+id/ibChange"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="20dp"
+                    android:background="@color/colorWhite"
+                    android:src="@drawable/ic_change"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/llPerson"
+                android:layout_marginTop="10dp"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:background="@color/colorGray">
+
+                <TextView
+                    android:id="@+id/tvMessage"
+                    android:theme="@style/personText"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginTop="4dp"
+                    android:elevation="4dp"
+                    android:text="消息篓"
+                    android:textSize="15dp"
+                    android:drawableLeft="@drawable/ic_box" />
+
+                <TextView
+                    android:id="@+id/tvGoods"
+                    android:theme="@style/personText"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_weight="1"
+                    android:elevation="4dp"
+                    android:text="失物和寻物"
+                    android:textSize="15dp"
+                    android:drawableLeft="@drawable/ic_goods" />
+
+                <TextView
+                    android:id="@+id/tvAddAccount"
+                    android:theme="@style/personText"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_weight="1"
+                    android:elevation="4dp"
+                    android:textSize="15dp"
+                    android:drawableLeft="@drawable/ic_add"
+                    android:text="添加账号" />
+
+                <TextView
+                    android:id="@+id/tvSetting"
+                    android:theme="@style/personText"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_weight="1"
+                    android:elevation="4dp"
+                    android:text="设置"
+                    android:textSize="15dp"
+                    android:drawableLeft="@drawable/ic_setting" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <TextView
+        android:id="@+id/tvOut"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="4dp"
+        android:text="退出账号"
+        android:textSize="15dp"
+        android:drawableTop="@color/colorGray"
+        android:elevation="10dp"
+        android:gravity="center"
+        android:padding="10dp"
+        android:background="@drawable/info_frame_shape"
+        android:layout_margin="10dp"/>
 
 
 </LinearLayout>

@@ -16,6 +16,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.SwitchCompat;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,13 +39,10 @@ import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.SaveCallback;
+import com.example.lostandfoudfirst.MainActivity;
 import com.example.lostandfoudfirst.R;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import MUtils.DrawableUtils;
-import MainTabFragment.FragmentAll;
 
 /**
  * 建立丢失物品的信息
@@ -52,12 +50,22 @@ import MainTabFragment.FragmentAll;
  * 1.先确定是否有注册账号
  * 2.实现各种逻辑
  * 3.传递数据给需要适配的recycleView
+ *
+ * 用户不传照片默认为图标
  * Created by fulxtaw on 2017/12/9.
  */
 
 public class FragmentAddInfo extends Fragment {
+
+    /**
+     * 选择拍照为途径
+     */
     private static final int IMAGE_CAPTURE = 0;
+    /**
+     * 选择相册
+     */
     private static final int GET_CONTENT = 1;
+
     private ImageView ivGoodsImage;
     private EditText etGoodsName;
     private EditText etGoodsPlace;
@@ -92,6 +100,8 @@ public class FragmentAddInfo extends Fragment {
         infoActivity = getActivity();
         getDisplay();
         View fragmentAddInfoView = inflater.inflate(R.layout.fragment_add,container,false);
+        //要放在此处方便改变控件的大小
+        initView(fragmentAddInfoView);
         return fragmentAddInfoView;
     }
 
@@ -101,41 +111,33 @@ public class FragmentAddInfo extends Fragment {
 
         manager = getFragmentManager();
 
-        initView(view);
-        //假如没有登入先登入
-        if (isLogin()){
-            skipToLogin();
-        }else {
-
-            ibCommit.setOnClickListener(new View.OnClickListener() {
-                boolean count = true;
-                @Override
-                public void onClick(View view) {
-                    if (count){
-                        count = false;
-                        Toast.makeText(infoActivity,"再次点击确认无误",Toast.LENGTH_SHORT).show();
-                    }else {
-                        count = true;
-                        commitToInternet();
-                    }
+        ibCommit.setOnClickListener(new View.OnClickListener() {
+            boolean count = true;
+            @Override
+            public void onClick(View view) {
+                if (count){
+                    count = false;
+                    Toast.makeText(infoActivity,"再次点击确认无误",Toast.LENGTH_SHORT).show();
+                }else {
+                    // TODO: 2017/12/22 按时间计算两次点击，是否应该改变参量
+                    count = true;
+                    commitToInternet();
                 }
-            });
+            }
+        });
 
-            setImageAddAnimator();
+        setImageAddAnimator();
 
-            ibInfoImageAdd.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    showDialog();
-                }
-            });
-            //建立swtich的小tip
-            setTips();
+        ibInfoImageAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDialog();
+            }
+        });
+        //建立swtich的小tip
+        setTips();
 
-        }
     }
-
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -145,12 +147,16 @@ public class FragmentAddInfo extends Fragment {
                 if(data != null){
                     //只会返回bitmap
                     Bundle bundle = data.getExtras();
-                    //取图片
+
+                    //取图片，todo 处理一下返回数据，有的数据不是bitmap
                     Bitmap bitmap = bundle.getParcelable("data");
-                    imageData = DrawableUtils.bitmapToByte(bitmap);
-                    dialog.dismiss();
-                    ivGoodsImage.setImageBitmap(bitmap);
-                    ibInfoImageAdd.setVisibility(View.GONE);
+
+                    if (bitmap != null){
+                        imageData = DrawableUtils.bitmapToByte(bitmap);
+                        dialog.dismiss();
+                        ivGoodsImage.setImageBitmap(bitmap);
+                        ibInfoImageAdd.setVisibility(View.GONE);
+                    }
                 } else {
                     return;
                 }
@@ -176,7 +182,8 @@ public class FragmentAddInfo extends Fragment {
             windowManager = infoActivity.getWindowManager();
             display = windowManager.getDefaultDisplay();
         }
-
+        //设置键盘弹出的模式
+        infoActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
     }
 
     private void initView(View view){
@@ -192,9 +199,13 @@ public class FragmentAddInfo extends Fragment {
         swhIsLost.setChecked(false);
 
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) ivGoodsImage.getLayoutParams();
-        params.height = (int) (display.getHeight() * 0.25);
+        params.height = (int) (display.getHeight() * 0.21);
         ivGoodsImage.setLayoutParams(params);
 
+        //处理是否被遮挡
+        RelativeLayout.LayoutParams param = (RelativeLayout.LayoutParams) etGoodsInfo.getLayoutParams();
+        param.height = (int) (display.getHeight() * 0.21);
+        etGoodsInfo.setLayoutParams(param);
         setVisibilityTip();
     }
 
@@ -209,7 +220,6 @@ public class FragmentAddInfo extends Fragment {
             }
         },10000);
     }
-
 
     /**
      * 将dialog展现出来
@@ -276,6 +286,7 @@ public class FragmentAddInfo extends Fragment {
         animator.setRepeatCount(ValueAnimator.INFINITE);
         //设置方向直行
         animator.setRepeatMode(Animation.REVERSE);
+
         ibInfoImageAdd.startAnimation(animator);
     }
 
@@ -301,6 +312,8 @@ public class FragmentAddInfo extends Fragment {
 
     /**
      * 将信息数据提交到网络
+     * 数据储存方式
+     * 有name，place，time，info，user，file
      */
     private void commitToInternet() {
         AVUser user = AVUser.getCurrentUser();
@@ -309,33 +322,57 @@ public class FragmentAddInfo extends Fragment {
         goods.put("place",etGoodsPlace.getText().toString());
         goods.put("time",etGoodsTime.getText().toString());
         if (imageData != null){
-            goods.put("image",new AVFile(etGoodsName.getText().toString()+"image",imageData));
+            goods.put("image",new AVFile(etGoodsName.getText().toString()+"Image",imageData));
         }else {
-            goods.put("File",null);
+            imageData = DrawableUtils.DrawableToByte(getResources().getDrawable(R.mipmap.ic_launcher));
+            goods.put("image",new AVFile(etGoodsName.getText().toString()+"Image",imageData));
         }
         goods.put("isLost",swhIsLost.isChecked());
-        goods.put("owner",user);
+        goods.put("goodOwner",user);
         goods.saveInBackground(new SaveCallback() {
             @Override
             public void done(AVException e) {
-                skipToMain();
-                Toast.makeText(infoActivity,e.getMessage().toString(),Toast.LENGTH_LONG).show();
+                if (e == null){
+                    skipToMain();
+                    Toast.makeText(infoActivity,"成功",Toast.LENGTH_LONG).show();
+                    clearInfo();
+                }else {
+                    Log.d("infoActivity",e.getMessage().toString());
+                    Toast.makeText(infoActivity,e.getMessage().toString(),Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
+
+    /**
+     * 由于framgment不是重新加载，需要收到清除数据
+     */
+    private void clearInfo() {
+        etGoodsInfo.setText("");
+        etGoodsName.setText("");
+        etGoodsPlace.setText("");
+        etGoodsTime.setText("");
+        ivGoodsImage.setImageBitmap(null);
+    }
+
     /**
      * 跳转到首页
      */
     private void skipToMain() {
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.hide(FragmentAddInfo.this).add(R.id.layout_contain,new FragmentAll());
-        transaction.commitAllowingStateLoss();
+//        FragmentTransaction transaction = manager.beginTransaction();
+//        transaction.hide(FragmentAddInfo.this).add(R.id.layout_contain,new FragmentMain());
+//        transaction.commitAllowingStateLoss();
+        MainActivity activity = (MainActivity) infoActivity;
+
+        activity.onTabSelected(1);
+
     }
 
     /**
      * 跳转到登入界面
      */
     private void skipToLogin() {
+        // TODO: 2017/12/21 传递数据
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.hide(FragmentAddInfo.this).add(R.id.layout_contain,new FragmentPerson());
         transaction.commitAllowingStateLoss();
@@ -348,5 +385,6 @@ public class FragmentAddInfo extends Fragment {
     public boolean isLogin() {
         return AVUser.getCurrentUser() == null;
     }
+
 
 }

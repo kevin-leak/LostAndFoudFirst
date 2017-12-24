@@ -50,6 +50,10 @@
             android:name="com.avos.avoscloud.feedback.ThreadActivity" >
         </activity>
         <!-- 反馈组件 END -->
+
+        <activity android:name=".LoginAndRegisterActivity"></activity>
+        <activity android:name=".MessageAndGoodsActivity"></activity>
+        <activity android:name=".ConversationActivity"></activity>
     </application>
 
 </manifest>
