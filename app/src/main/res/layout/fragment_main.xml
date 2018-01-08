@@ -4,19 +4,23 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <android.support.design.widget.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        app:tabIndicatorHeight="2dp"
-        android:layout_marginTop="20dp"
-        app:tabIndicatorColor="@color/colorGuide"
-        app:tabTextColor="#263238"
-        app:tabSelectedTextColor="#ff8f00"
-        app:tabMode="fixed"
-        app:tabGravity="fill"
-        app:tabBackground="@drawable/tabshow"
-        />
+        android:theme="@style/Theme.AppCompat"
+        app:tabSelectedTextColor="#FFFFFF"
+        android:layout_height="wrap_content"
+        app:tabTextColor="#FFFFFF"
+        app:tabMode="scrollable"
+        android:layout_gravity="center_horizontal"
+        app:tabGravity="center"
+        android:paddingTop="50dp"
+        app:tabIndicatorHeight="4dp"
+        app:tabIndicatorColor="#4ABDAC"
+        app:tabTextAppearance="@android:style/TextAppearance.Holo.Large"
+        android:background="#F9C134"
+        android:elevation="5dp" />
     <View
         android:layout_width="wrap_content"
         android:layout_height="0.5dp"
@@ -25,7 +29,9 @@
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:layout_marginBottom="50dp"
+        android:elevation="5dp">
     </android.support.v4.view.ViewPager>
 
 </LinearLayout>

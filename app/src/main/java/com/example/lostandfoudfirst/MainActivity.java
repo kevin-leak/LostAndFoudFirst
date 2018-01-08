@@ -6,17 +6,31 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.GetCallback;
+import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.AVIMException;
+import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 
 import java.util.ArrayList;
 
 import BottomFragment.FragmentAddInfo;
 import BottomFragment.FragmentMain;
 import BottomFragment.FragmentPerson;
+import cn.leancloud.chatkit.LCChatKit;
+
+import static com.example.lostandfoudfirst.R.color.colorWhite;
 
 public class MainActivity extends AppCompatActivity implements  BottomNavigationBar.OnTabSelectedListener{
 
@@ -29,15 +43,20 @@ public class MainActivity extends AppCompatActivity implements  BottomNavigation
     private FragmentTransaction fragmentTransaction;
     private ArrayList<Fragment> fragments;
     private FragmentManager fragmentManager;
-
+    AVObject object;
+    private Long lastBackTime = 0l;
+    private final long Back_INTERVAL = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide();
+        requestWindowFeature(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
+        getSupportActionBar().hide();
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+//        getSupportActionBar().setBackgroundDrawable();
+        getSupportActionBar();
         initView();
-
     }
 
 
@@ -45,9 +64,9 @@ public class MainActivity extends AppCompatActivity implements  BottomNavigation
         //TODO 还可设置顶部导航栏的效果
         bottomNavigationBar=(BottomNavigationBar)findViewById(R.id.bottom_bar);
 
-        bottomNavigationBar.addItem(new BottomNavigationItem(R.drawable.ic_info_in_blue_200_24dp,"发布")).setActiveColor(R.color.colorWhite)
-                .addItem(new BottomNavigationItem(R.drawable.ic_main_blue_200_24dp,"")).setActiveColor(R.color.colorWhite)
-                .addItem(new BottomNavigationItem(R.drawable.ic_personinfo_blue_200_24dp,"个人信息")).setActiveColor(R.color.colorWhite)
+        bottomNavigationBar.addItem(new BottomNavigationItem(R.drawable.ic_info_in_blue_200_24dp,"发布")).setActiveColor(colorWhite)
+                .addItem(new BottomNavigationItem(R.drawable.ic_main_blue_200_24dp,"")).setActiveColor(colorWhite)
+                .addItem(new BottomNavigationItem(R.drawable.ic_personinfo_blue_200_24dp,"个人信息")).setActiveColor(colorWhite)
                 .setFirstSelectedPosition(1)
                 .initialise();
 
@@ -154,4 +173,14 @@ public class MainActivity extends AppCompatActivity implements  BottomNavigation
 
     }
 
+    @Override
+    public void onBackPressed() {
+        Long currentTime = System.currentTimeMillis();
+        if (currentTime - lastBackTime < Back_INTERVAL){
+            super.onBackPressed();
+        }else {
+            Toast.makeText(this,"双击 back 退出",Toast.LENGTH_SHORT).show();
+        }
+        lastBackTime = currentTime;
+    }
 }

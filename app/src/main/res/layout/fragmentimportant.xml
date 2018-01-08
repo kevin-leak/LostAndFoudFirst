@@ -2,12 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <TextView
-        android:id="@+id/text_importantnews"
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/srlMessageOrGoodsImportant"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="贵重物品"
-        android:textSize="35sp"
-        android:gravity="center"/>
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvMessageOrGoodsImportant"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@color/colorGray"/>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

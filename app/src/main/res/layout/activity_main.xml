@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.example.lostandfoudfirst.MainActivity">
     <RelativeLayout
         android:id="@+id/layout_contain"
@@ -17,6 +18,7 @@
         android:id="@+id/bottom_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:elevation="10dp"
         android:layout_alignParentBottom="true">
 
     </com.ashokvarma.bottomnavigation.BottomNavigationBar>

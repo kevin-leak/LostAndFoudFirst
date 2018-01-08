@@ -2,12 +2,18 @@ package MainTabFragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
+import com.example.lostandfoudfirst.CustomGoodsProvider;
 import com.example.lostandfoudfirst.R;
+
+import MyAdapter.MembersAdapter;
+import MyView.SpacesItemDecoration;
 
 
 /**
@@ -16,20 +22,64 @@ import com.example.lostandfoudfirst.R;
 
 public class FragmentImportant extends android.support.v4.app.Fragment {
 
-    private TextView textView;
+    private SwipeRefreshLayout srlMessageOrGoodsImportant;
+    private RecyclerView rvMessageOrGoodsLostImportant;
+    LinearLayoutManager layoutManagerLostImportant;
+    private MembersAdapter itemAdapterLost;
+
+
+
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragmentimportant,container,false);
+
+        srlMessageOrGoodsImportant = view.findViewById(R.id.srlMessageOrGoodsImportant);
+        rvMessageOrGoodsLostImportant = view.findViewById(R.id.rvMessageOrGoodsImportant);
+
+        layoutManagerLostImportant = new LinearLayoutManager(getContext());
+
+        int spacingInPixels = 8;
+
+        rvMessageOrGoodsLostImportant.setLayoutManager(layoutManagerLostImportant);
+        //rvMessageOrGoodsLostImportant.addItemDecoration(new LCIMDividerItemDecoration(getApplicationContext()));
+        rvMessageOrGoodsLostImportant.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
+        itemAdapterLost = new MembersAdapter(R.layout.holder_all,MembersAdapter.IMPORTANT,getContext());
+        rvMessageOrGoodsLostImportant.setAdapter(itemAdapterLost);
+        refreshMembers();
+        srlMessageOrGoodsImportant.post(new Runnable() {
+            @Override
+            public void run() {
+                if (rvMessageOrGoodsLostImportant.getChildCount() != 0){
+                    srlMessageOrGoodsImportant.setRefreshing(true);
+                    refreshMembers();
+                }else {
+
+                }
+            }
+        });
+        srlMessageOrGoodsImportant.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshMembers();
+            }
+        });
+
         return view;
 
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onResume() {
+        super.onResume();
+        refreshMembers();
+    }
 
-        super.onViewCreated(view, savedInstanceState);
-        textView=(TextView) view.findViewById(R.id.text_importantnews);
+    private void refreshMembers() {
+        itemAdapterLost.setMemberList(CustomGoodsProvider.getInstance().getAllGoods());
+        itemAdapterLost.notifyDataSetChanged();
+        srlMessageOrGoodsImportant.setRefreshing(false);
     }
 }

@@ -7,11 +7,20 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.text.Layout;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.TextView;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.GetCallback;
 import com.example.lostandfoudfirst.R;
 
 import MainTabFragment.MyFragmentPagerAdapter;
@@ -32,6 +41,7 @@ public class FragmentMain extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_main,container,false);
+        setHasOptionsMenu(true);
         return view;
     }
 
@@ -43,7 +53,7 @@ public class FragmentMain extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
         //使用适配器将ViewPager与Fragment绑定在一起
-        viewPager=(ViewPager)view.findViewById(R.id.viewpager);
+        viewPager = (ViewPager) view.findViewById(R.id.viewpager);
         myFragmentPagerAdapter = new MyFragmentPagerAdapter(getChildFragmentManager());
         viewPager.setAdapter(myFragmentPagerAdapter);
 
@@ -51,19 +61,22 @@ public class FragmentMain extends Fragment {
         tabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
 
-        //指定Tab的位置
-        tabone = tabLayout.getTabAt(0);
-        tabtwo = tabLayout.getTabAt(1);
-        tabthree = tabLayout.getTabAt(2);
-        tabfour = tabLayout.getTabAt(3);
+
+//        //指定Tab的位置
+//        tabone = tabLayout.getTabAt(0);
+//        tabtwo = tabLayout.getTabAt(1);
+//        tabthree = tabLayout.getTabAt(2);
+//        tabfour = tabLayout.getTabAt(3);
+        //默认
+        tabLayout.getTabAt(2).select();
 
         /*设置tab的监听事件*/
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-
+                tabLayout.getTabAt(tab.getPosition()).select();
+                viewPager.setCurrentItem(tab.getPosition());
             }
-
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
 
@@ -80,4 +93,21 @@ public class FragmentMain extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_main,menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.itCharger){
+            // TODO: 2018/1/1 管理
+        }else {
+            // TODO: 2018/1/1 退出
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,10 +18,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.GetCallback;
 import com.example.lostandfoudfirst.LoginAndRegisterActivity;
-import com.example.lostandfoudfirst.MessageAndGoodsActivity;
+import com.example.lostandfoudfirst.GoodsActivity;
+import com.example.lostandfoudfirst.MessageActivity;
 import com.example.lostandfoudfirst.R;
+import com.squareup.picasso.Picasso;
 
 /**
  *
@@ -32,7 +39,7 @@ public class FragmentPerson extends Fragment {
     private FragmentActivity personActivity;
     private Display display;
     private LinearLayout llPerson;
-    private ImageView ivUserAvater;
+    private ImageView ivUserAvatar;
     private TextView tvUserName;
     private TextView tvDetails;
     private TextView tvMessage;
@@ -66,10 +73,12 @@ public class FragmentPerson extends Fragment {
 
         //用户注册信息
         rlUserInfo = view.findViewById(R.id.rlUserInfo);
-        ivUserAvater = view.findViewById(R.id.ivUserAvater);
+        ivUserAvatar = view.findViewById(R.id.ivUserAvater);
         tvUserName = view.findViewById(R.id.tvUserName);
         tvDetails = view.findViewById(R.id.tvDetails);
         ibChange = view.findViewById(R.id.ibChange);
+
+        setPersonInfo();
 
         tvMessage = view.findViewById(R.id.tvMessage);
         tvGoods = view.findViewById(R.id.tvGoods);
@@ -78,10 +87,41 @@ public class FragmentPerson extends Fragment {
         tvOut = view.findViewById(R.id.tvOut);
     }
 
+    /**
+     * 设置显示用户信息
+     */
+    private void setPersonInfo() {
+        if (AVUser.getCurrentUser() != null){
+            tvUserName.setText(AVUser.getCurrentUser().getUsername());
+            tvDetails.setText(AVUser.getCurrentUser().getMobilePhoneNumber());
+            String userInfo = AVUser.getCurrentUser().getString("userInfo");
+            AVQuery<AVObject> query = new AVQuery<>("UserInfo");
+            query.getInBackground(userInfo, new GetCallback<AVObject>() {
+                @Override
+                public void done(AVObject avObject, AVException e) {
+                    if (avObject == null ||avObject.getAVFile("avatarFile") == null){
+                        return;
+                    }
+                    String url = avObject.getAVFile("avatarFile").getUrl();
+                    if (!TextUtils.isEmpty(url)){
+                        Picasso.with(getContext().getApplicationContext()).load(url).into(ivUserAvatar);
+                    }else {
+                        ivUserAvatar.setImageResource(R.mipmap.ic_default);
+                    }
+                }
+            });
+        }
+    }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
         super.onViewCreated(view, savedInstanceState);
+        AVUser user = AVUser.getCurrentUser();
+//        if (user != null){
+//
+//            Picasso.with(getContext()).load();
+//        }
 
         addAccount();
 
@@ -95,14 +135,14 @@ public class FragmentPerson extends Fragment {
         tvMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                personActivity.startActivity(new Intent(personActivity, MessageAndGoodsActivity.class));
+                personActivity.startActivity(new Intent(personActivity, MessageActivity.class));
             }
         });
 
         tvGoods.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                personActivity.startActivity(new Intent(personActivity, MessageAndGoodsActivity.class));
+                personActivity.startActivity(new Intent(personActivity, GoodsActivity.class));
             }
         });
     }
@@ -116,6 +156,9 @@ public class FragmentPerson extends Fragment {
             public void onClick(View view) {
                 AVUser.getCurrentUser().logOut();
                 Toast.makeText(personActivity,"已经离线",Toast.LENGTH_LONG).show();
+                tvUserName.setText("未登入");
+                tvDetails.setText("请登入");
+                ivUserAvatar.setImageResource(R.drawable.ic_camera);
             }
         });
     }
@@ -145,7 +188,7 @@ public class FragmentPerson extends Fragment {
                     //要加上getActivity()获取的对象
                     personActivity.startActivityForResult(intent, LoginAndRegisterActivity.LOGIN_CODE);
                 }else {
-                    Toast.makeText(personActivity,"已经登入",Toast.LENGTH_LONG).show();
+                    setPersonInfo();
                     return;
                 }
             }
@@ -171,17 +214,13 @@ public class FragmentPerson extends Fragment {
                 intent.putExtra(LoginAndRegisterActivity.SHOULD_DO,LoginAndRegisterActivity.REGISTER);
                 intent.setClass(personActivity,LoginAndRegisterActivity.class);
                 personActivity.startActivityForResult(intent, LoginAndRegisterActivity.REGISTER_CODE);
-
             }
         });
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // TODO: 2017/12/23 处理登入和注册的返回数据
-        if (requestCode == LoginAndRegisterActivity.LOGIN_CODE){
-
-        }
-        super.onActivityResult(requestCode, resultCode, data);
+    public void onPause() {
+        setPersonInfo();
+        super.onPause();
     }
 }

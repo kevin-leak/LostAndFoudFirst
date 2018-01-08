@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">LostAndFoudFirst</string>
+    <string name="MessageTitle">Message</string>
+    <!--设置圆形头像的属性-->
+    <declare-styleable name="CircleHead">
+        <attr name="circleBorderHeadWidth" format="dimension" />
+        <attr name="ringHeadColor" format="color" />
+        <attr name="backgroundHeadColor" format="color" />
+    </declare-styleable>
 </resources>

@@ -16,6 +16,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.SwitchCompat;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -37,10 +38,15 @@ import android.widget.Toast;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.example.lostandfoudfirst.MainActivity;
 import com.example.lostandfoudfirst.R;
+
+import java.io.ByteArrayOutputStream;
+import java.util.List;
 
 import MUtils.DrawableUtils;
 
@@ -98,6 +104,11 @@ public class FragmentAddInfo extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         this.inflater = inflater;
         infoActivity = getActivity();
+
+//        WindowManager.LayoutParams lp = infoActivity.getWindow().getAttributes();
+//        lp.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
+//        infoActivity.getWindow().setAttributes(lp);
+
         getDisplay();
         View fragmentAddInfoView = inflater.inflate(R.layout.fragment_add,container,false);
         //要放在此处方便改变控件的大小
@@ -321,14 +332,17 @@ public class FragmentAddInfo extends Fragment {
         goods.put("name",etGoodsName.getText().toString());
         goods.put("place",etGoodsPlace.getText().toString());
         goods.put("time",etGoodsTime.getText().toString());
+        goods.put("info",etGoodsInfo.getText().toString());
         if (imageData != null){
-            goods.put("image",new AVFile(etGoodsName.getText().toString()+"Image",imageData));
+            goods.put("image",new AVFile(etGoodsName.getText().toString()+"Image",getCopress(imageData)));
         }else {
             imageData = DrawableUtils.DrawableToByte(getResources().getDrawable(R.mipmap.ic_launcher));
             goods.put("image",new AVFile(etGoodsName.getText().toString()+"Image",imageData));
         }
         goods.put("isLost",swhIsLost.isChecked());
         goods.put("goodOwner",user);
+        goods.put("ownerInfoId",user.getString("userInfo"));
+
         goods.saveInBackground(new SaveCallback() {
             @Override
             public void done(AVException e) {
@@ -343,7 +357,13 @@ public class FragmentAddInfo extends Fragment {
             }
         });
     }
-
+    private byte[] getCopress(byte[] bs) {
+        Bitmap bitmap = BitmapFactory.decodeByteArray(bs, 0, bs.length);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG,10,bos);
+        byte[] bytes = bos.toByteArray();
+        return bytes;
+    }
     /**
      * 由于framgment不是重新加载，需要收到清除数据
      */
@@ -372,10 +392,11 @@ public class FragmentAddInfo extends Fragment {
      * 跳转到登入界面
      */
     private void skipToLogin() {
-        // TODO: 2017/12/21 传递数据
+        // TODO: 2017/12/21 传递数据,返回数据确定是都要结束这个fragment
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.hide(FragmentAddInfo.this).add(R.id.layout_contain,new FragmentPerson());
         transaction.commitAllowingStateLoss();
+
     }
 
 

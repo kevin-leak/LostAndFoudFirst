@@ -39,9 +39,11 @@
 
                 <ImageView
                     android:id="@+id/ivUserAvater"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/ic_image"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/ic_camera"
+                    android:scaleType="centerCrop"
+                    android:elevation="2dp"
                     android:layout_alignParentLeft="true"
                     android:layout_margin="20dp"/>
 
@@ -51,7 +53,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_height="wrap_content"
                     android:text="未登入"
-                    android:textSize="18dp"
+                    android:textSize="16dp"
                     android:background="@color/colorWhite"
                     android:layout_toRightOf="@id/ivUserAvater"
                     android:layout_alignParentTop="true" />
@@ -61,7 +63,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="点击登入"
-                    android:textSize="10dp"
+                    android:textSize="18dp"
                     android:layout_marginTop="5dp"
                     android:layout_below="@id/tvUserName"
                     android:layout_toRightOf="@id/ivUserAvater"

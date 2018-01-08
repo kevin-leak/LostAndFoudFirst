@@ -2,12 +2,15 @@ package com.example.lostandfoudfirst;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
@@ -18,6 +21,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,13 +31,12 @@ import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogInCallback;
+import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.SignUpCallback;
-import com.avos.avoscloud.im.v2.AVIMClient;
-import com.avos.avoscloud.im.v2.AVIMException;
-import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
+
+import java.io.ByteArrayOutputStream;
 
 import MUtils.DrawableUtils;
-import cn.leancloud.chatkit.LCChatKit;
 
 /**
  * 此类用于建立客户端和登入注册界面
@@ -79,10 +82,14 @@ public class LoginAndRegisterActivity extends Activity {
     private Button btnGetCode;
     private EditText etSetCode;
     private ImageView ivUserAvatar;
+    private ProgressBar pbCommit;
     /**
      * 设置一个开关，动态的添加View，和View之间的切换
      */
     private boolean switchView = true;
+    /**
+     * 一个开关动态的控制，回退
+     */
     private String state;
 
     /**
@@ -103,7 +110,7 @@ public class LoginAndRegisterActivity extends Activity {
 
         initView();
         intent = getIntent();
-        //获取名字为shouldDo里面的信息
+        //获取名字为shouldDo里面的信息,辨别是注册还是登入
         String shouldDo = intent.getStringExtra(LoginAndRegisterActivity.SHOULD_DO);
         String infoShouldDO = intent.getStringExtra(LoginAndRegisterActivity.INFO_SHOULD_DO);
 
@@ -129,8 +136,9 @@ public class LoginAndRegisterActivity extends Activity {
 
         ibProblem.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+             public void onClick(View view) {
                 // TODO: 2017/12/23 重置密码
+                Toast.makeText(LoginAndRegisterActivity.this, "解决密码问题",Toast.LENGTH_LONG).show();
             }
         });
 
@@ -167,6 +175,7 @@ public class LoginAndRegisterActivity extends Activity {
     private void initRegisterView() {
         etAccount.setHint("phone");
         etAccount.setInputType(InputType.TYPE_CLASS_PHONE);
+        etSetCode.setVisibility(View.VISIBLE);
         if (switchView){
             switchView = false;
             addRegisterView();
@@ -175,18 +184,19 @@ public class LoginAndRegisterActivity extends Activity {
             ivUserAvatar.setVisibility(View.VISIBLE);
         }
 
-        tvUserTitle.setText("Sign Up");
+        tvUserTitle.setVisibility(View.GONE);
         tvSwitchTo.setText("Sign In");
     }
 
     private void addRegisterView() {
         etNickName = new EditText(getApplicationContext());
         etNickName.setHint("nickName");
-        etNickName.setTextColor(Color.BLACK);
+        etNickName.setTextColor(Color.GRAY);
         etNickName.setGravity(Gravity.CENTER);
         etNickName.setBackgroundResource(R.color.colorGray);
         etNickName.setAlpha(0.5f);
         etNickName.setWidth(50);
+        etNickName.setAlpha(0.5f);
         llCode.setVisibility(View.VISIBLE);
         llLoginAndRegister.addView(etNickName,1);
 
@@ -194,11 +204,19 @@ public class LoginAndRegisterActivity extends Activity {
 
         ivUserAvatar.setMaxHeight(50);
         ivUserAvatar.setMaxHeight(50);
-        ivUserAvatar.setImageResource(R.mipmap.ic_launcher);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(50,50);
-        ivUserAvatar.setImageResource(R.mipmap.ic_launcher);
+        ivUserAvatar.setImageResource(R.mipmap.ic_default);
+        ivUserAvatar.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT,(int) (display.getWidth()*0.4));
+        params.setMargins(0,0,0,20);
         ivUserAvatar.setLayoutParams(params);
         llLoginAndRegister.addView(ivUserAvatar,0);
+
+        ivUserAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(LoginAndRegisterActivity.this,"切换头像",Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     /**
@@ -237,6 +255,7 @@ public class LoginAndRegisterActivity extends Activity {
 //
 //                    }
 //                });
+                        Toast.makeText(LoginAndRegisterActivity.this,"获取验证码，未开通，服务器要收钱",Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -244,14 +263,12 @@ public class LoginAndRegisterActivity extends Activity {
                 user.setUsername(nickName);
                 user.setPassword(password);
                 user.setMobilePhoneNumber(phone);
+                pbCommit.setVisibility(View.VISIBLE);
                 user.signUpInBackground(new SignUpCallback() {
                     @Override
                     public void done(AVException e) {
                         if (e == null){
-                            AVObject avatar = new AVObject("Avatar");
-                            avatar.put("owner",user);
-                            avatar.put("image",new AVFile(user.getUsername()+"Avatar",userAvatar));
-                            avatar.saveInBackground();
+                            setUserInfo(user, userAvatar);
                             Toast.makeText(LoginAndRegisterActivity.this,"请登入",Toast.LENGTH_LONG).show();
                             AVUser.getCurrentUser().logOut();
                             login();
@@ -260,14 +277,49 @@ public class LoginAndRegisterActivity extends Activity {
                         }
                     }
                 });
+                pbCommit.setVisibility(View.GONE);
             }
         });
     }
 
     /**
+     * @param user 传入用户
+     * @param userAvatar 传入用户的照片数据
+     */
+    private void setUserInfo(final AVUser user, byte[] userAvatar) {
+        //建立user信息查询表
+        final AVFile file = new AVFile(user.getUsername() + "Avatar",getCopress(userAvatar));
+        final AVObject userInfo = new AVObject("UserInfo");
+        userInfo.put("userName",user.getUsername());
+        userInfo.put("userId",user.getObjectId());
+        userInfo.put("name",user.getUsername()+"Info");
+        userInfo.put("owner",user);
+        userInfo.put("userPhone",user.getMobilePhoneNumber());
+        userInfo.put("avatarFile",file);
+        userInfo.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                if (e != null){
+                    Toast.makeText(LoginAndRegisterActivity.this,e.getMessage().toString(),Toast.LENGTH_LONG);
+                }else {
+                    user.put("userInfo",userInfo.getObjectId());
+                    user.saveInBackground();
+                }
+            }
+        });
+    }
+    private byte[] getCopress(byte[] bs) {
+        Bitmap bitmap = BitmapFactory.decodeByteArray(bs, 0, bs.length);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG,10,bos);
+        byte[] bytes = bos.toByteArray();
+        return bytes;
+    }
+    /**
      * 初始化登入界面
      */
     private void initLoginView() {
+        tvUserTitle.setVisibility(View.VISIBLE);
         tvUserTitle.setText("Sign In");
         etAccount.setHint("account");
         if (!switchView){
@@ -293,62 +345,69 @@ public class LoginAndRegisterActivity extends Activity {
 
                 if (TextUtils.isEmpty(account) || TextUtils.isEmpty(password)){
                     Toast.makeText(LoginAndRegisterActivity.this,"请输入账户和密码",Toast.LENGTH_LONG).show();
+                }else {
+                    pbCommit.setVisibility(View.VISIBLE);
+                    if (!account.matches(phoneMatch)){
+                        signInByName(account, password);
+                    }else{
+                        signInByPhone(account, password);
+                    }
                 }
+                pbCommit.setVisibility(View.GONE);
+            }
 
-                if (!account.matches(phoneMatch)){
-                    AVUser.logInInBackground(account, password, new LogInCallback<AVUser>() {
-                        @Override
-                        public void done(AVUser avUser, AVException e) {
-                            if (e != null){
-                                Toast.makeText(LoginAndRegisterActivity.this,e.getMessage().toString(),Toast.LENGTH_LONG).show();
-                            }else {
-                                //打开客户端
-                                LCChatKit.getInstance().open(AVUser.getCurrentUser().getObjectId(), new AVIMClientCallback() {
-                                    @Override
-                                    public void done(AVIMClient avimClient, AVIMException e) {
-                                        if (e != null){
-                                            Toast.makeText(LoginAndRegisterActivity.this,e.getMessage().toString(),Toast.LENGTH_LONG).show();
-                                        }else {
-                                            Toast.makeText(LoginAndRegisterActivity.this,"登入成功",Toast.LENGTH_LONG).show();
-                                        }
-                                    }
-                                });
-                                //返回数据
-                                intent.putExtra("User",AVUser.getCurrentUser());
-                                LoginAndRegisterActivity.this.setResult(LoginAndRegisterActivity.LOGIN_CODE,intent);
-                                LoginAndRegisterActivity.this.finish();
-                            }
-                        }
-                    });
-                }else{
-                    AVUser.loginByMobilePhoneNumberInBackground(account, password, new LogInCallback<AVUser>() {
-                        @Override
-                        public void done(AVUser avUser, AVException e) {
-                            if (e != null){
-                                Toast.makeText(LoginAndRegisterActivity.this,e.getMessage().toString(),Toast.LENGTH_LONG).show();
-                            }else {
-                                //打开客户端
-                                LCChatKit.getInstance().open(AVUser.getCurrentUser().getObjectId(), new AVIMClientCallback() {
-                                    @Override
-                                    public void done(AVIMClient avimClient, AVIMException e) {
-                                        if (e != null){
-                                            Toast.makeText(LoginAndRegisterActivity.this,e.getMessage().toString(),Toast.LENGTH_LONG).show();
-                                        }else {
-                                            Toast.makeText(LoginAndRegisterActivity.this,"登入成功",Toast.LENGTH_LONG).show();
-                                        }
-                                    }
-                                });
-                                //返回数据
-                                intent.putExtra("User",AVUser.getCurrentUser());
-                                LoginAndRegisterActivity.this.setResult(LoginAndRegisterActivity.LOGIN_CODE,intent);
-                                LoginAndRegisterActivity.this.finish();
-                            }
-                        }
-                    });
+        });
+    }
+
+    /**
+     * sign in by name
+     * @param account 用户的名字
+     * @param password 密码
+     */
+    private void signInByName(String account, String password) {
+        AVUser.logInInBackground(account, password, new LogInCallback<AVUser>() {
+            @Override
+            public void done(AVUser avUser, AVException e) {
+                if (e != null){
+                    Toast.makeText(LoginAndRegisterActivity.this,e.getMessage().toString(),Toast.LENGTH_LONG).show();
+                }else {
+                    //打开客户端
+                    //返回数据
+                    intentToPersonSet();
                 }
             }
         });
     }
+
+    /**
+     * sign by phone
+     * @param account 用户的电话
+     * @param password 用户的密码
+     */
+    private void signInByPhone(String account, String password) {
+        AVUser.loginByMobilePhoneNumberInBackground(account, password, new LogInCallback<AVUser>() {
+            @Override
+            public void done(AVUser avUser, AVException e) {
+                if (e != null){
+                    Toast.makeText(LoginAndRegisterActivity.this,e.getMessage().toString(),Toast.LENGTH_LONG).show();
+                }else {
+                    intentToPersonSet();
+                }
+            }
+        });
+    }
+
+    /**
+     * 成功打开客户端或返回数据
+     */
+    private void intentToPersonSet() {
+        //返回数据
+        intent.putExtra("User", AVUser.getCurrentUser().getObjectId());
+        LoginAndRegisterActivity.this.setResult(LoginAndRegisterActivity.LOGIN_CODE,intent);
+        LoginAndRegisterActivity.this.finish();
+    }
+
+
 
     /**
      * 初始化固有的view
@@ -363,7 +422,8 @@ public class LoginAndRegisterActivity extends Activity {
         llCode = findViewById(R.id.llCode);
         btnGetCode = findViewById(R.id.btnGetCode);
         etSetCode = findViewById(R.id.etSetCode);
-
+        pbCommit = findViewById(R.id.pbCommit);
+        pbCommit.setVisibility(View.GONE);
 
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) llLoginAndRegister.getLayoutParams();
         params.width = (int) (display.getWidth()*0.8);

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_height="wrap_content"
+    android:elevation="3dp"
+    android:layout_marginTop="10dp"
+    android:padding="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginBottom="8dp"
+    android:background="@drawable/info_frame_shape">
+
+    <MyView.CircleView
+        android:id="@+id/cvImgInfo"
+        android:layout_width="58dp"
+        android:layout_height="58dp"
+        android:scaleType="centerCrop"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        app:ringHeadColor="#c7b8b8"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:elevation="10dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:id="@+id/tv_name"
+        android:singleLine="true"
+        android:text="name"
+        android:textStyle="bold"
+        android:drawablePadding="5dp"
+        android:textSize="15sp"
+        android:elevation="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/cvImgInfo"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
+        android:id="@+id/tvInfoAll"
+        android:drawablePadding="5dp"
+        android:elevation="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_toRightOf="@id/cvImgInfo"
+        android:layout_alignTop="@id/tv_name"
+        android:text="招移动代理，有需要的可以找我，社团，学生会，班干，兼职都是我们上大学必须经历的，没有什么可以说的"
+        android:textSize="15sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:drawableRight="@drawable/ic_place"
+        android:id="@+id/tvPlaceAll"
+        android:singleLine="true"
+        android:textAlignment="textEnd"
+        android:layout_marginRight="3dp"
+        android:layout_marginTop="2dp"
+        android:elevation="10dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="end" />
+
+    <TextView
+        android:id="@+id/tvTimeShowAll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="textEnd"
+        android:text="time"
+        android:layout_marginTop="10dp"
+        android:textSize="10sp"
+        android:elevation="10dp"
+        android:gravity="end"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true" />
+
+
+</RelativeLayout>

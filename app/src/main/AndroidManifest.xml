@@ -52,8 +52,9 @@
         <!-- 反馈组件 END -->
 
         <activity android:name=".LoginAndRegisterActivity"></activity>
-        <activity android:name=".MessageAndGoodsActivity"></activity>
+        <activity android:name=".GoodsActivity"></activity>
         <activity android:name=".ConversationActivity"></activity>
+        <activity android:name=".MessageActivity"></activity>
     </application>
 
 </manifest>

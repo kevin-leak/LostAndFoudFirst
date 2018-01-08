@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_height="wrap_content"
+    android:elevation="3dp"
+    android:layout_marginTop="10dp"
+    android:padding="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginBottom="8dp"
+    android:background="@drawable/info_frame_shape">
+
+    <MyView.CircleView
+        android:id="@+id/img_avatar"
+        android:layout_width="58dp"
+        android:layout_height="58dp"
+        android:scaleType="centerCrop"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:elevation="10dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:drawableRight="@drawable/ic_place"
+        android:id="@+id/tvPlaceShow"
+        android:singleLine="true"
+        android:textAlignment="textEnd"
+        android:layout_marginRight="3dp"
+        android:layout_marginTop="2dp"
+        android:elevation="10dp"
+        android:gravity="end" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvUserNameShow"
+        android:singleLine="true"
+        android:layout_centerVertical="true"
+        android:text="尘影"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/img_avatar"
+        android:textSize="20sp"
+        android:elevation="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvPhoneShow"
+        android:singleLine="true"
+        android:layout_centerVertical="true"
+        android:text="18879790098"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/img_avatar"
+        android:layout_below="@id/tvUserNameShow"
+        android:textSize="20sp"
+        android:elevation="10dp" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/img_avatar"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginTop="13dp"
+        android:elevation="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:id="@+id/tv_name"
+            android:singleLine="true"
+            android:text="name"
+            android:textStyle="bold"
+            android:drawablePadding="5dp"
+            android:textSize="15sp"
+            android:elevation="10dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            android:id="@+id/tvInfo"
+            android:text="招移动代理，有需要的可以找我，社团，学生会，班干，兼职都是我们上大学必须经历的，没有什么可以说的"
+            android:textSize="20sp"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:id="@+id/ivInfoImage"
+            android:layout_gravity="center_horizontal"
+            android:src="@mipmap/ic_launcher"/>
+
+        <TextView
+            android:id="@+id/tvTimeShow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="textEnd"
+            android:text="time"
+            android:textSize="10sp"
+            android:elevation="10dp"
+            android:gravity="end" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>
