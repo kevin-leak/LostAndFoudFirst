@@ -101,6 +101,7 @@ public class CircleView extends android.support.v7.widget.AppCompatImageView{
             //画边框
             canvas.drawCircle(mWidth/2, mHeight/2, mRadius + mCircleBorderWidth/2, mPaintBorder);
         }else {
+
             super.onDraw(canvas);
         }
     }
