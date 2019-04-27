@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.lostandfoudfirst">
 
 
@@ -19,11 +20,12 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:name=".LostAndFoundFirst"
+        android:name=".LAFFAPP"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
 
         <!-- 实时通信模块、推送（均需要加入以下声明） START -->
         <!-- 实时通信模块、推送都要使用 PushService -->
@@ -51,10 +53,10 @@
         </activity>
         <!-- 反馈组件 END -->
 
-        <activity android:name=".LoginAndRegisterActivity"></activity>
-        <activity android:name=".GoodsActivity"></activity>
-        <activity android:name=".ConversationActivity"></activity>
-        <activity android:name=".MessageActivity"></activity>
+        <activity android:name=".myView.activity.LoginAndRegisterActivity"></activity>
+        <activity android:name=".myView.activity.GoodsActivity"></activity>
+        <activity android:name=".myView.activity.ConversationActivity"></activity>
+        <activity android:name=".myView.activity.MessageActivity"></activity>
     </application>
 
 </manifest>

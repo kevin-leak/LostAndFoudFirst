@@ -6,29 +6,20 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
-import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.GetCallback;
-import com.avos.avoscloud.im.v2.AVIMClient;
-import com.avos.avoscloud.im.v2.AVIMException;
-import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 
 import java.util.ArrayList;
 
-import BottomFragment.FragmentAddInfo;
-import BottomFragment.FragmentMain;
-import BottomFragment.FragmentPerson;
-import cn.leancloud.chatkit.LCChatKit;
+import com.example.lostandfoudfirst.myView.activity.LoginAndRegisterActivity;
+import com.example.lostandfoudfirst.myView.fragment.BottomFragment.FragmentAddInfo;
+import com.example.lostandfoudfirst.myView.fragment.BottomFragment.FragmentMain;
+import com.example.lostandfoudfirst.myView.fragment.BottomFragment.FragmentPerson;
 
 import static com.example.lostandfoudfirst.R.color.colorWhite;
 
